@@ -1,0 +1,37 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: app-__ENV__
+  namespace: openshift-gitops
+spec:
+  generators:
+  - clusters: {}
+  template:
+    metadata:
+      name: app-__ENV__
+    spec:
+      destination:
+        namespace: app-__ENV__
+        server: https://kubernetes.default.svc
+      ignoreDifferences:
+      - jsonPointers:
+        - /imagePullSecrets
+        - /secrets
+        kind: ServiceAccount
+      project: app-__ENV__
+      source:
+        helm:
+          valueFiles:
+          - values.yaml
+          - configmap.yaml
+          - secrets.yaml
+        path: devops/__ENV__
+        repoURL: https://github.com/challenge-devsu/app.git
+        targetRevision: __BRANCH__
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+        - Replace=false
+        - PruneLast=true

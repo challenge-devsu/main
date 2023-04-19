@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: app-__ENV__
+  namespace: openshift-gitops
+spec:
+  clusterResourceWhitelist:
+  - group: '*'
+    kind: '*'
+  description: app-__ENV__
+  destinations:
+  - namespace: '*'
+    server: '*'
+  sourceRepos:
+  - '*'
